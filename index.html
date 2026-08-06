@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Position Sizing & Margin Calculator | Leverage Trading</title>
+  <meta name="description"
+    content="Calculate exact position size, required margin, and liquidation safety for futures and leverage trading with fixed dollar risk.">
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="dark-theme">
+
+  <!-- Header Navbar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div class="logo-text">
+          <h1>RiskMargin </h1>
+          <p>Futures Position Sizing & Margin Calculator</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggleBtn" class="action-btn icon-btn" title="Toggle Light/Dark Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button id="copySummaryBtn" class="action-btn primary-subtle">
+          <i class="fa-regular fa-copy"></i> Copy Setup
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-layout">
+    <!-- Left Column: Inputs & Controls -->
+    <div class="left-panel">
+
+      <!-- Calculator Mode Switcher -->
+      <div class="card mode-card">
+        <div class="mode-tabs">
+          <button class="mode-tab active" data-mode="percentage">
+            <i class="fa-solid fa-percent"></i> Quick % SL Mode
+          </button>
+          <button class="mode-tab" data-mode="price">
+            <i class="fa-solid fa-arrow-trend-up"></i> Exact Price Mode
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Input Card -->
+      <div class="card input-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-sliders"></i> Trade Parameters</h2>
+          <span class="pulse-indicator live-badge"><i class="fa-solid fa-circle"></i> Live Math</span>
+        </div>
+
+        <form id="calcForm" onsubmit="return false;">
+
+          <!-- Position Direction (Long / Short) -->
+          <div class="form-group direction-group">
+            <label>Position Direction</label>
+            <div class="direction-toggle">
+              <input type="radio" id="dirLong" name="direction" value="long" checked>
+              <label for="dirLong" class="dir-btn long-btn">
+                <i class="fa-solid fa-up-long"></i> LONG
+              </label>
+
+              <input type="radio" id="dirShort" name="direction" value="short">
+              <label for="dirShort" class="dir-btn short-btn">
+                <i class="fa-solid fa-down-long"></i> SHORT
+              </label>
+            </div>
+          </div>
+
+          <!-- 1. Fixed Risk ($) -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="riskInput">Fixed Dollar Risk ($)</label>
+              <span class="tooltip-icon"
+                title="The exact maximum dollar amount you are willing to lose on this trade if Stop Loss is hit.">
+                <i class="fa-solid fa-circle-info"></i>
+              </span>
+            </div>
+            <div class="input-with-symbol">
+              <span class="symbol">$</span>
+              <input type="number" id="riskInput" value="25" min="0.1" step="any" placeholder="25">
+            </div>
+            <!-- Presets -->
+            <div class="preset-chips" id="riskPresets">
+              <button type="button" class="chip" data-value="10">$10</button>
+              <button type="button" class="chip active" data-value="25">$25</button>
+              <button type="button" class="chip" data-value="50">$50</button>
+              <button type="button" class="chip" data-value="100">$100</button>
+              <button type="button" class="chip" data-value="250">$250</button>
+            </div>
+          </div>
+
+          <!-- 2. Stop Loss Distance (%) - PERCENTAGE MODE -->
+          <div class="form-group mode-field percentage-mode-field">
+            <div class="label-row">
+              <label for="slPercentInput">Stop Loss Distance (%)</label>
+              <span class="val-display" id="slPercentValDisplay">2.0%</span>
+            </div>
+            <div class="input-with-symbol">
+              <input type="number" id="slPercentInput" value="2" min="0.01" max="100" step="any" placeholder="2.0">
+              <span class="symbol symbol-right">%</span>
+            </div>
+            <input type="range" id="slPercentSlider" class="range-slider" min="0.1" max="15" step="0.1" value="2">
+            <!-- Presets -->
+            <div class="preset-chips" id="slPresets">
+              <button type="button" class="chip" data-value="0.5">0.5%</button>
+              <button type="button" class="chip" data-value="1">1.0%</button>
+              <button type="button" class="chip active" data-value="2">2.0%</button>
+              <button type="button" class="chip" data-value="3">3.0%</button>
+              <button type="button" class="chip" data-value="5">5.0%</button>
+            </div>
+          </div>
+
+          <!-- Price Mode Fields (Entry & SL Price) -->
+          <div class="price-mode-group mode-field price-mode-field hidden">
+            <div class="form-group">
+              <label for="entryPriceInput">Entry Price ($)</label>
+              <div class="input-with-symbol">
+                <span class="symbol">$</span>
+                <input type="number" id="entryPriceInput" value="65000" min="0.000001" step="any" placeholder="65000">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="slPriceInput">Stop Loss Price ($)</label>
+              <div class="input-with-symbol">
+                <span class="symbol">$</span>
+                <input type="number" id="slPriceInput" value="63700" min="0.000001" step="any" placeholder="63700">
+              </div>
+              <div class="computed-hint" id="computedSlHint">Distance: 2.0% away</div>
+            </div>
+          </div>
+
+          <!-- 3. Leverage (x) -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="leverageInput">Leverage Cross/Isolated</label>
+              <span class="val-display" id="leverageValDisplay">20x</span>
+            </div>
+            <div class="input-with-symbol">
+              <input type="number" id="leverageInput" value="20" min="1" max="200" step="1" placeholder="20">
+              <span class="symbol symbol-right">x</span>
+            </div>
+            <input type="range" id="leverageSlider" class="range-slider" min="1" max="100" step="1" value="20">
+            <!-- Presets -->
+            <div class="preset-chips" id="leveragePresets">
+              <button type="button" class="chip" data-value="5">5x</button>
+              <button type="button" class="chip" data-value="10">10x</button>
+              <button type="button" class="chip active" data-value="20">20x</button>
+              <button type="button" class="chip" data-value="50">50x</button>
+              <button type="button" class="chip" data-value="100">100x</button>
+            </div>
+          </div>
+
+          <!-- Advanced Toggle (Fees & Coin Symbol) -->
+          <div class="advanced-accordion">
+            <button type="button" class="accordion-toggle" id="advancedToggle">
+              <span><i class="fa-solid fa-gears"></i> Advanced Settings (Fees & Asset Units)</span>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </button>
+            <div class="accordion-content hidden" id="advancedContent">
+              <div class="form-group">
+                <label for="assetSymbol">Asset Symbol / Name</label>
+                <input type="text" id="assetSymbol" value="BTC/USDT" placeholder="BTC/USDT">
+              </div>
+              <div class="form-group">
+                <label for="entryPriceOpt">Entry Price (Optional for Coin Quantity)</label>
+                <div class="input-with-symbol">
+                  <span class="symbol">$</span>
+                  <input type="number" id="entryPriceOpt" value="65000" min="0" step="any" placeholder="65000">
+                </div>
+              </div>
+              <div class="form-group checkbox-group">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="includeFees">
+                  <span class="checkmark"></span>
+                  Include Exchange Fees (0.05% Taker Entry + Exit)
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Take Profit Target Card -->
+      <div class="card tp-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-bullseye"></i> Take Profit & Risk/Reward</h2>
+        </div>
+        <div class="rr-selector">
+          <button type="button" class="rr-btn" data-rr="1">1 : 1</button>
+          <button type="button" class="rr-btn active" data-rr="2">1 : 2</button>
+          <button type="button" class="rr-btn" data-rr="3">1 : 3</button>
+          <button type="button" class="rr-btn" data-rr="4">1 : 4</button>
+          <button type="button" class="rr-btn" data-rr="5">1 : 5</button>
+        </div>
+        <div class="tp-results-grid">
+          <div class="tp-item">
+            <span class="tp-label">Target Reward ($)</span>
+            <span class="tp-val gain" id="tpRewardVal">+$50.00</span>
+          </div>
+          <div class="tp-item">
+            <span class="tp-label">TP Distance (%)</span>
+            <span class="tp-val" id="tpDistanceVal">+4.00%</span>
+          </div>
+          <div class="tp-item">
+            <span class="tp-label">Return on Margin</span>
+            <span class="tp-val gain" id="tpRomVal">+80.00%</span>
+          </div>
+          <div class="tp-item">
+            <span class="tp-label">Est. Take Profit Price</span>
+            <span class="tp-val highlight" id="tpPriceVal">$67,600.00</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Primary Output & Analytics -->
+    <div class="right-panel">
+
+      <!-- Primary Output Banner -->
+      <div class="card hero-result-card">
+        <div class="hero-header">
+          <span class="sub-heading">Trade Margin Required</span>
+          <span class="status-pill safe" id="safetyStatusPill"><i class="fa-solid fa-shield-halved"></i> Safe
+            Distance</span>
+        </div>
+
+        <div class="primary-stat">
+          <span class="currency-symbol">$</span>
+          <span id="marginOutput" class="stat-number">62.50</span>
+          <span class="stat-unit">USDT</span>
+        </div>
+        <p class="hero-explanation">
+          Add exactly <strong id="marginHighlight">$62.50</strong> margin to your <strong><span
+              id="levHighlight">20</span>x</strong> trade to risk exactly <strong><span
+              id="riskHighlight">$25.00</span></strong> on a <strong><span id="slHighlight">2.0</span>%</strong> stop
+          loss.
+        </p>
+
+        <!-- Dynamic Visual Gauge -->
+        <div class="visual-gauge-box">
+          <div class="gauge-labels">
+            <span>Required Margin ($62.50)</span>
+            <span>Leveraged Value ($1,250.00)</span>
+          </div>
+          <div class="gauge-bar-container">
+            <div class="gauge-margin-bar" id="gaugeMarginBar" style="width: 5%;"></div>
+            <div class="gauge-borrowed-bar" id="gaugeBorrowedBar" style="width: 95%;"></div>
+          </div>
+          <div class="gauge-footer">
+            <span><i class="fa-solid fa-wallet"></i> Margin: <span id="gaugeMarginPct">5%</span></span>
+            <span><i class="fa-solid fa-bolt"></i> Borrowed (19x): <span id="gaugeBorrowedVal">$1,187.50</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="metrics-grid">
+
+        <div class="card metric-card">
+          <div class="metric-icon position-icon">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-title">Total Position Size</span>
+            <span class="metric-value" id="positionSizeVal">$1,250.00</span>
+            <span class="metric-subtitle" id="coinQtyVal">0.01923 BTC</span>
+          </div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="metric-icon risk-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-title">Loss on Margin</span>
+            <span class="metric-value loss-text" id="marginLossPctVal">40.00%</span>
+            <span class="metric-subtitle" id="maxDollarLossVal">$25.00 Loss</span>
+          </div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="metric-icon liq-icon">
+            <i class="fa-solid fa-skull-crossbones"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-title">Est. Liq. Distance</span>
+            <span class="metric-value" id="liqDistanceVal">~5.00%</span>
+            <span class="metric-subtitle" id="liqPriceVal">Est. Price: $61,750.00</span>
+          </div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="metric-icon fee-icon">
+            <i class="fa-solid fa-receipt"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-title">Estimated Fees</span>
+            <span class="metric-value" id="feeEstVal">$1.25</span>
+            <span class="metric-subtitle">0.05% Taker In + Out</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Liquidation Warning Box -->
+      <div class="alert-box hidden" id="liqAlertBox">
+        <div class="alert-icon">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="alert-content">
+          <h4>HIGH LIQUIDATION RISK!</h4>
+          <p id="liqAlertText">
+            Your Stop Loss (2% away) is further than your estimated Liquidation price (~5.0% away)! You will be
+            liquidated BEFORE your stop loss gets executed. Reduce leverage or tighten your SL.
+          </p>
+        </div>
+      </div>
+
+      <!-- Price Level Visualizer -->
+      <div class="card price-visualizer-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-arrows-up-down"></i> Trade Price Levels</h2>
+          <span class="dir-badge long" id="dirBadge">LONG</span>
+        </div>
+
+        <div class="price-levels">
+          <!-- Take Profit Level -->
+          <div class="price-row tp-row">
+            <div class="level-indicator tp-indicator">
+              <i class="fa-solid fa-flag-checkered"></i> TP Level
+            </div>
+            <div class="level-price" id="vizTpPrice">$67,600.00</div>
+            <div class="level-diff gain" id="vizTpDiff">+4.00% (+$50.00)</div>
+          </div>
+
+          <!-- Entry Level -->
+          <div class="price-row entry-row">
+            <div class="level-indicator entry-indicator">
+              <i class="fa-solid fa-location-crosshairs"></i> Entry Level
+            </div>
+            <div class="level-price" id="vizEntryPrice">$65,000.00</div>
+            <div class="level-diff neut">0.00% ($0.00)</div>
+          </div>
+
+          <!-- Stop Loss Level -->
+          <div class="price-row sl-row">
+            <div class="level-indicator sl-indicator">
+              <i class="fa-solid fa-hand"></i> SL Level
+            </div>
+            <div class="level-price" id="vizSlPrice">$63,700.00</div>
+            <div class="level-diff loss" id="vizSlDiff">-2.00% (-$25.00)</div>
+          </div>
+
+          <!-- Liquidation Level -->
+          <div class="price-row liq-row">
+            <div class="level-indicator liq-indicator">
+              <i class="fa-solid fa-ban"></i> Est. Liquidation
+            </div>
+            <div class="level-price" id="vizLiqPrice">$61,750.00</div>
+            <div class="level-diff loss" id="vizLiqDiff">-5.00% (-$62.50)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons & Trade Logger -->
+      <div class="action-bar-row">
+        <button id="saveTradeBtn" class="action-btn primary-btn large-btn">
+          <i class="fa-solid fa-bookmark"></i> Save Trade Setup
+        </button>
+        <button id="clearLogBtn" class="action-btn secondary-btn">
+          <i class="fa-solid fa-trash-can"></i> Clear History
+        </button>
+      </div>
+
+      <!-- Saved Trades Journal -->
+      <div class="card journal-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-list-check"></i> Saved Trades Log</h2>
+          <span class="counter-badge" id="tradeCountBadge">0 saved</span>
+        </div>
+        <div class="table-wrapper">
+          <table class="trades-table" id="tradesTable">
+            <thead>
+              <tr>
+                <th>Dir</th>
+                <th>Asset</th>
+                <th>Risk</th>
+                <th>SL %</th>
+                <th>Lev</th>
+                <th>Position</th>
+                <th>Margin</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="tradesTableBody">
+              <tr class="empty-row">
+                <td colspan="8">No saved trades yet. Click "Save Trade Setup" above to log position calculations.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden">
+    <i class="fa-solid fa-circle-check"></i> <span id="toastMsg">Action completed!</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
