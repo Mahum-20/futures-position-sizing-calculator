@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Position Sizing & Margin Calculator | Leverage Trading</title>
+  <title>RiskMargin PRO — Elite Crypto Futures Position & Risk Terminal</title>
   <meta name="description"
-    content="Calculate exact position size, required margin, and liquidation safety for futures and leverage trading with fixed dollar risk.">
+    content="Next-generation crypto futures position sizing calculator, real-time live feeds, visual canvas chart, AI risk auditor, multi-TP ladder, and social trade exporter.">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><path d='M20 70 L42 45 L60 55 L80 25 M80 25 L65 25 M80 25 L80 40' stroke='%230b0f19' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><path d='M20 70 L42 45 L60 55 L80 25 M80 25 L65 25 M80 25 L80 40' stroke='%230b0f19' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
   <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/candlestick-chart.png">
-
 
   <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,402 +34,779 @@
           <i class="fa-solid fa-chart-line"></i>
         </div>
         <div class="logo-text">
-          <h1>RiskMargin </h1>
-          <p>Futures Position Sizing & Margin Calculator</p>
+          <h1>RiskMargin <span class="badge">PRO TERMINAL</span></h1>
+          <p>Futures Position Sizing & Advanced Risk Management Suite</p>
         </div>
       </div>
+
       <div class="header-actions">
+        <!-- Currency Selector -->
+        <div class="currency-selector" title="Select Display Currency">
+          <i class="fa-solid fa-coins currency-icon"></i>
+          <select id="currencySelect" class="currency-dropdown">
+            <option value="USD" selected>USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="CAD">CAD (CA$)</option>
+            <option value="AUD">AUD (A$)</option>
+            <option value="INR">INR (₹)</option>
+            <option value="JPY">JPY (¥)</option>
+            <option value="PKR">PKR (Rs)</option>
+          </select>
+        </div>
+
+        <!-- Audio Sound Toggle -->
+        <button id="soundToggleBtn" class="action-btn icon-btn" title="Toggle Cyberpunk Sound FX">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+
+        <!-- Theme Toggle -->
         <button id="themeToggleBtn" class="action-btn icon-btn" title="Toggle Light/Dark Theme">
           <i class="fa-solid fa-moon"></i>
         </button>
+
+        <!-- Export Social Setup Card -->
+        <button id="exportCardBtn" class="action-btn secondary-btn" title="Generate Shareable Trade Card Graphic">
+          <i class="fa-solid fa-camera"></i> Share Card
+        </button>
+
+        <!-- Copy Text Setup -->
         <button id="copySummaryBtn" class="action-btn primary-subtle">
-          <i class="fa-regular fa-copy"></i> Copy Setup
+          <i class="fa-regular fa-copy"></i> Copy Text
         </button>
       </div>
     </div>
   </header>
 
-  <main class="main-layout">
-    <!-- Left Column: Inputs & Controls -->
-    <div class="left-panel">
-
-      <!-- Calculator Mode Switcher -->
-      <div class="card mode-card">
-        <div class="mode-tabs">
-          <button class="mode-tab active" data-mode="percentage">
-            <i class="fa-solid fa-percent"></i> Quick % SL Mode
-          </button>
-          <button class="mode-tab" data-mode="price">
-            <i class="fa-solid fa-arrow-trend-up"></i> Exact Price Mode
-          </button>
-        </div>
+  <!-- Live Market Price Ticker Stream -->
+  <div class="ticker-bar">
+    <div class="ticker-container">
+      <div class="ticker-label">
+        <span class="live-pulse"></span>
+        <i class="fa-solid fa-bolt"></i> Live Prices:
       </div>
+      <div class="ticker-chips" id="tickerChips">
+        <button type="button" class="ticker-chip active" data-pair="BTCUSDT">
+          <span class="symbol">BTC</span>
+          <span class="price" id="ticker-BTCUSDT">--</span>
+          <span class="change" id="change-BTCUSDT">--</span>
+        </button>
+        <button type="button" class="ticker-chip" data-pair="ETHUSDT">
+          <span class="symbol">ETH</span>
+          <span class="price" id="ticker-ETHUSDT">--</span>
+          <span class="change" id="change-ETHUSDT">--</span>
+        </button>
+        <button type="button" class="ticker-chip" data-pair="SOLUSDT">
+          <span class="symbol">SOL</span>
+          <span class="price" id="ticker-SOLUSDT">--</span>
+          <span class="change" id="change-SOLUSDT">--</span>
+        </button>
+        <button type="button" class="ticker-chip" data-pair="BNBUSDT">
+          <span class="symbol">BNB</span>
+          <span class="price" id="ticker-BNBUSDT">--</span>
+          <span class="change" id="change-BNBUSDT">--</span>
+        </button>
+        <button type="button" class="ticker-chip" data-pair="XRPUSDT">
+          <span class="symbol">XRP</span>
+          <span class="price" id="ticker-XRPUSDT">--</span>
+          <span class="change" id="change-XRPUSDT">--</span>
+        </button>
+        <button type="button" class="ticker-chip" data-pair="DOGEUSDT">
+          <span class="symbol">DOGE</span>
+          <span class="price" id="ticker-DOGEUSDT">--</span>
+          <span class="change" id="change-DOGEUSDT">--</span>
+        </button>
+        <button type="button" class="ticker-chip" data-pair="SUIUSDT">
+          <span class="symbol">SUI</span>
+          <span class="price" id="ticker-SUIUSDT">--</span>
+          <span class="change" id="change-SUIUSDT">--</span>
+        </button>
+      </div>
+      <button id="syncPriceBtn" class="sync-price-btn" title="Sync Selected Live Price into Entry Price">
+        <i class="fa-solid fa-rotate"></i> Sync Entry Price
+      </button>
+    </div>
+  </div>
 
-      <!-- Main Input Card -->
-      <div class="card input-card">
-        <div class="card-header">
-          <h2><i class="fa-solid fa-sliders"></i> Trade Parameters</h2>
-          <span class="pulse-indicator live-badge"><i class="fa-solid fa-circle"></i> Live Math</span>
-        </div>
+  <!-- AI Trade Auditor Banner -->
+  <div class="ai-audit-banner" id="aiAuditBanner">
+    <div class="audit-badge-box">
+      <div class="grade-circle grade-a" id="aiGradeBadge">A+</div>
+      <div class="audit-score-title">
+        <h3>AI Trade Audit Score: <span id="aiScorePct">96%</span></h3>
+        <p id="aiGradeSummary">Prime Risk/Reward ratio with high liquidation margin.</p>
+      </div>
+    </div>
+    <div class="audit-tips" id="aiAuditAdvice">
+      <!-- Injected dynamically by JS -->
+    </div>
+  </div>
 
-        <form id="calcForm" onsubmit="return false;">
+  <!-- Main Dashboard Tabs Navigation -->
+  <div class="dashboard-nav-container">
+    <nav class="dashboard-tabs">
+      <button class="dash-tab active" data-tab="tab-calculator">
+        <i class="fa-solid fa-calculator"></i> Position & Canvas Chart
+      </button>
+      <button class="dash-tab" data-tab="tab-multitp">
+        <i class="fa-solid fa-bullseye"></i> Multi-TP Exit Ladder
+      </button>
+      <button class="dash-tab" data-tab="tab-portfolio">
+        <i class="fa-solid fa-shield-halved"></i> Portfolio Risk & Kelly
+      </button>
+      <button class="dash-tab" data-tab="tab-stresstest">
+        <i class="fa-solid fa-volcano"></i> Stress Test & Flash Wick
+      </button>
+    </nav>
+  </div>
 
-          <!-- Position Direction (Long / Short) -->
-          <div class="form-group direction-group">
-            <label>Position Direction</label>
-            <div class="direction-toggle">
-              <input type="radio" id="dirLong" name="direction" value="long" checked>
-              <label for="dirLong" class="dir-btn long-btn">
-                <i class="fa-solid fa-up-long"></i> LONG
-              </label>
+  <main class="main-layout">
 
-              <input type="radio" id="dirShort" name="direction" value="short">
-              <label for="dirShort" class="dir-btn short-btn">
-                <i class="fa-solid fa-down-long"></i> SHORT
-              </label>
+    <!-- TAB 1: PRIMARY CALCULATOR & CANVAS CHART -->
+    <div id="tab-calculator" class="tab-content active">
+      <div class="two-col-grid">
+        
+        <!-- Left Panel: Inputs & Controls -->
+        <div class="left-panel">
+          <!-- Calculator Mode Switcher -->
+          <div class="card mode-card">
+            <div class="mode-tabs">
+              <button class="mode-tab active" data-mode="percentage">
+                <i class="fa-solid fa-percent"></i> Quick % SL Mode
+              </button>
+              <button class="mode-tab" data-mode="price">
+                <i class="fa-solid fa-arrow-trend-up"></i> Exact Price Mode
+              </button>
             </div>
           </div>
 
-          <!-- 1. Fixed Risk ($) -->
-          <div class="form-group">
-            <div class="label-row">
-              <label for="riskInput">Fixed Dollar Risk ($)</label>
-              <span class="tooltip-icon"
-                title="The exact maximum dollar amount you are willing to lose on this trade if Stop Loss is hit.">
-                <i class="fa-solid fa-circle-info"></i>
-              </span>
-            </div>
-            <div class="input-with-symbol">
-              <span class="symbol">$</span>
-              <input type="number" id="riskInput" value="25" min="0.1" step="any" placeholder="25">
-            </div>
-            <!-- Presets -->
-            <div class="preset-chips" id="riskPresets">
-              <button type="button" class="chip" data-value="10">$10</button>
-              <button type="button" class="chip active" data-value="25">$25</button>
-              <button type="button" class="chip" data-value="50">$50</button>
-              <button type="button" class="chip" data-value="100">$100</button>
-              <button type="button" class="chip" data-value="250">$250</button>
-            </div>
-          </div>
-
-          <!-- 2. Stop Loss Distance (%) - PERCENTAGE MODE -->
-          <div class="form-group mode-field percentage-mode-field">
-            <div class="label-row">
-              <label for="slPercentInput">Stop Loss Distance (%)</label>
-              <span class="val-display" id="slPercentValDisplay">2.0%</span>
-            </div>
-            <div class="input-with-symbol">
-              <input type="number" id="slPercentInput" value="2" min="0.01" max="100" step="any" placeholder="2.0">
-              <span class="symbol symbol-right">%</span>
-            </div>
-            <input type="range" id="slPercentSlider" class="range-slider" min="0.1" max="15" step="0.1" value="2">
-            <!-- Presets -->
-            <div class="preset-chips" id="slPresets">
-              <button type="button" class="chip" data-value="0.5">0.5%</button>
-              <button type="button" class="chip" data-value="1">1.0%</button>
-              <button type="button" class="chip active" data-value="2">2.0%</button>
-              <button type="button" class="chip" data-value="3">3.0%</button>
-              <button type="button" class="chip" data-value="5">5.0%</button>
-            </div>
-          </div>
-
-          <!-- Price Mode Fields (Entry & SL Price) -->
-          <div class="price-mode-group mode-field price-mode-field hidden">
-            <div class="form-group">
-              <label for="entryPriceInput">Entry Price ($)</label>
-              <div class="input-with-symbol">
-                <span class="symbol">$</span>
-                <input type="number" id="entryPriceInput" value="65000" min="0.000001" step="any" placeholder="65000">
-              </div>
+          <!-- Main Input Card -->
+          <div class="card input-card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-sliders"></i> Trade Parameters</h2>
+              <span class="pulse-indicator live-badge"><i class="fa-solid fa-circle"></i> Reactive Math</span>
             </div>
 
-            <div class="form-group">
-              <label for="slPriceInput">Stop Loss Price ($)</label>
-              <div class="input-with-symbol">
-                <span class="symbol">$</span>
-                <input type="number" id="slPriceInput" value="63700" min="0.000001" step="any" placeholder="63700">
-              </div>
-              <div class="computed-hint" id="computedSlHint">Distance: 2.0% away</div>
-            </div>
-          </div>
+            <form id="calcForm" onsubmit="return false;">
 
-          <!-- 3. Leverage (x) -->
-          <div class="form-group">
-            <div class="label-row">
-              <label for="leverageInput">Leverage Cross/Isolated</label>
-              <span class="val-display" id="leverageValDisplay">20x</span>
-            </div>
-            <div class="input-with-symbol">
-              <input type="number" id="leverageInput" value="20" min="1" max="200" step="1" placeholder="20">
-              <span class="symbol symbol-right">x</span>
-            </div>
-            <input type="range" id="leverageSlider" class="range-slider" min="1" max="100" step="1" value="20">
-            <!-- Presets -->
-            <div class="preset-chips" id="leveragePresets">
-              <button type="button" class="chip" data-value="5">5x</button>
-              <button type="button" class="chip" data-value="10">10x</button>
-              <button type="button" class="chip active" data-value="20">20x</button>
-              <button type="button" class="chip" data-value="50">50x</button>
-              <button type="button" class="chip" data-value="100">100x</button>
-            </div>
-          </div>
+              <!-- Position Direction (Long / Short) -->
+              <div class="form-group direction-group">
+                <label>Position Direction</label>
+                <div class="direction-toggle">
+                  <input type="radio" id="dirLong" name="direction" value="long" checked>
+                  <label for="dirLong" class="dir-btn long-btn">
+                    <i class="fa-solid fa-up-long"></i> LONG
+                  </label>
 
-          <!-- Advanced Toggle (Fees & Coin Symbol) -->
-          <div class="advanced-accordion">
-            <button type="button" class="accordion-toggle" id="advancedToggle">
-              <span><i class="fa-solid fa-gears"></i> Advanced Settings (Fees & Asset Units)</span>
-              <i class="fa-solid fa-chevron-down toggle-icon"></i>
-            </button>
-            <div class="accordion-content hidden" id="advancedContent">
-              <div class="form-group">
-                <label for="assetSymbol">Asset Symbol / Name</label>
-                <input type="text" id="assetSymbol" value="BTC/USDT" placeholder="BTC/USDT">
-              </div>
-              <div class="form-group">
-                <label for="entryPriceOpt">Entry Price (Optional for Coin Quantity)</label>
-                <div class="input-with-symbol">
-                  <span class="symbol">$</span>
-                  <input type="number" id="entryPriceOpt" value="65000" min="0" step="any" placeholder="65000">
+                  <input type="radio" id="dirShort" name="direction" value="short">
+                  <label for="dirShort" class="dir-btn short-btn">
+                    <i class="fa-solid fa-down-long"></i> SHORT
+                  </label>
                 </div>
               </div>
-              <div class="form-group checkbox-group">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="includeFees">
-                  <span class="checkmark"></span>
-                  Include Exchange Fees (0.05% Taker Entry + Exit)
-                </label>
+
+              <!-- 1. Fixed Risk ($) -->
+              <div class="form-group">
+                <div class="label-row">
+                  <label for="riskInput">Fixed Dollar Risk (<span class="currency-sym">$</span>)</label>
+                  <span class="tooltip-icon"
+                    title="The exact maximum dollar amount you are willing to lose on this trade if Stop Loss is hit.">
+                    <i class="fa-solid fa-circle-info"></i>
+                  </span>
+                </div>
+                <div class="input-with-symbol">
+                  <span class="symbol currency-sym">$</span>
+                  <input type="number" id="riskInput" value="25" min="0.1" step="any" placeholder="25">
+                </div>
+                <!-- Presets -->
+                <div class="preset-chips" id="riskPresets">
+                  <button type="button" class="chip" data-value="10">$10</button>
+                  <button type="button" class="chip active" data-value="25">$25</button>
+                  <button type="button" class="chip" data-value="50">$50</button>
+                  <button type="button" class="chip" data-value="100">$100</button>
+                  <button type="button" class="chip" data-value="250">$250</button>
+                </div>
+              </div>
+
+              <!-- 2. Stop Loss Distance (%) - PERCENTAGE MODE -->
+              <div class="form-group mode-field percentage-mode-field">
+                <div class="label-row">
+                  <label for="slPercentInput">Stop Loss Distance (%)</label>
+                  <span class="val-display" id="slPercentValDisplay">2.0%</span>
+                </div>
+                <div class="input-with-symbol">
+                  <input type="number" id="slPercentInput" value="2" min="0.01" max="100" step="any" placeholder="2.0">
+                  <span class="symbol symbol-right">%</span>
+                </div>
+                <input type="range" id="slPercentSlider" class="range-slider" min="0.1" max="15" step="0.1" value="2">
+                <!-- Presets -->
+                <div class="preset-chips" id="slPresets">
+                  <button type="button" class="chip" data-value="0.5">0.5%</button>
+                  <button type="button" class="chip" data-value="1">1.0%</button>
+                  <button type="button" class="chip active" data-value="2">2.0%</button>
+                  <button type="button" class="chip" data-value="3">3.0%</button>
+                  <button type="button" class="chip" data-value="5">5.0%</button>
+                </div>
+              </div>
+
+              <!-- Price Mode Fields (Entry & SL Price) -->
+              <div class="price-mode-group mode-field price-mode-field hidden">
+                <div class="form-group">
+                  <label for="entryPriceInput">Entry Price (<span class="currency-sym">$</span>)</label>
+                  <div class="input-with-symbol">
+                    <span class="symbol currency-sym">$</span>
+                    <input type="number" id="entryPriceInput" value="65000" min="0.000001" step="any" placeholder="65000">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="slPriceInput">Stop Loss Price (<span class="currency-sym">$</span>)</label>
+                  <div class="input-with-symbol">
+                    <span class="symbol currency-sym">$</span>
+                    <input type="number" id="slPriceInput" value="63700" min="0.000001" step="any" placeholder="63700">
+                  </div>
+                  <div class="computed-hint" id="computedSlHint">Distance: 2.0% away</div>
+                </div>
+              </div>
+
+              <!-- 3. Leverage (x) -->
+              <div class="form-group">
+                <div class="label-row">
+                  <label for="leverageInput">Leverage Cross/Isolated</label>
+                  <span class="val-display" id="leverageValDisplay">20x</span>
+                </div>
+                <div class="input-with-symbol">
+                  <input type="number" id="leverageInput" value="20" min="1" max="200" step="1" placeholder="20">
+                  <span class="symbol symbol-right">x</span>
+                </div>
+                <input type="range" id="leverageSlider" class="range-slider" min="1" max="100" step="1" value="20">
+                <!-- Presets -->
+                <div class="preset-chips" id="leveragePresets">
+                  <button type="button" class="chip" data-value="5">5x</button>
+                  <button type="button" class="chip" data-value="10">10x</button>
+                  <button type="button" class="chip active" data-value="20">20x</button>
+                  <button type="button" class="chip" data-value="50">50x</button>
+                  <button type="button" class="chip" data-value="100">100x</button>
+                </div>
+              </div>
+
+              <!-- Advanced Accordion Toggle (Fees & Coin Symbol) -->
+              <div class="advanced-accordion">
+                <button type="button" class="accordion-toggle" id="advancedToggle">
+                  <span><i class="fa-solid fa-gears"></i> Advanced Options (Asset & Exchange Fees)</span>
+                  <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                </button>
+                <div class="accordion-content hidden" id="advancedContent">
+                  <div class="form-group">
+                    <label for="assetSymbol">Asset Pair Symbol</label>
+                    <input type="text" id="assetSymbol" value="BTC/USDT" placeholder="BTC/USDT">
+                  </div>
+                  <div class="form-group">
+                    <label for="entryPriceOpt">Entry Price Reference (Optional)</label>
+                    <div class="input-with-symbol">
+                      <span class="symbol currency-sym">$</span>
+                      <input type="number" id="entryPriceOpt" value="65000" min="0" step="any" placeholder="65000">
+                    </div>
+                  </div>
+                  <div class="form-group checkbox-group">
+                    <label class="checkbox-container">
+                      <input type="checkbox" id="includeFees">
+                      <span class="checkmark"></span>
+                      Deduct Exchange Taker Fees (0.05% Entry + 0.05% Exit)
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Take Profit Target Card -->
+          <div class="card tp-card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-bullseye"></i> Take Profit & Risk/Reward</h2>
+            </div>
+            <div class="rr-selector">
+              <button type="button" class="rr-btn" data-rr="1">1 : 1</button>
+              <button type="button" class="rr-btn active" data-rr="2">1 : 2</button>
+              <button type="button" class="rr-btn" data-rr="3">1 : 3</button>
+              <button type="button" class="rr-btn" data-rr="4">1 : 4</button>
+              <button type="button" class="rr-btn" data-rr="5">1 : 5</button>
+            </div>
+            <div class="tp-results-grid">
+              <div class="tp-item">
+                <span class="tp-label">Target Reward (<span class="currency-sym">$</span>)</span>
+                <span class="tp-val gain" id="tpRewardVal">+$50.00</span>
+              </div>
+              <div class="tp-item">
+                <span class="tp-label">TP Distance (%)</span>
+                <span class="tp-val" id="tpDistanceVal">+4.00%</span>
+              </div>
+              <div class="tp-item">
+                <span class="tp-label">Return on Margin</span>
+                <span class="tp-val gain" id="tpRomVal">+80.00%</span>
+              </div>
+              <div class="tp-item">
+                <span class="tp-label">Est. Take Profit Price</span>
+                <span class="tp-val highlight" id="tpPriceVal">$67,600.00</span>
               </div>
             </div>
           </div>
 
-        </form>
-      </div>
+        </div>
 
-      <!-- Take Profit Target Card -->
-      <div class="card tp-card">
-        <div class="card-header">
-          <h2><i class="fa-solid fa-bullseye"></i> Take Profit & Risk/Reward</h2>
-        </div>
-        <div class="rr-selector">
-          <button type="button" class="rr-btn" data-rr="1">1 : 1</button>
-          <button type="button" class="rr-btn active" data-rr="2">1 : 2</button>
-          <button type="button" class="rr-btn" data-rr="3">1 : 3</button>
-          <button type="button" class="rr-btn" data-rr="4">1 : 4</button>
-          <button type="button" class="rr-btn" data-rr="5">1 : 5</button>
-        </div>
-        <div class="tp-results-grid">
-          <div class="tp-item">
-            <span class="tp-label">Target Reward ($)</span>
-            <span class="tp-val gain" id="tpRewardVal">+$50.00</span>
-          </div>
-          <div class="tp-item">
-            <span class="tp-label">TP Distance (%)</span>
-            <span class="tp-val" id="tpDistanceVal">+4.00%</span>
-          </div>
-          <div class="tp-item">
-            <span class="tp-label">Return on Margin</span>
-            <span class="tp-val gain" id="tpRomVal">+80.00%</span>
-          </div>
-          <div class="tp-item">
-            <span class="tp-label">Est. Take Profit Price</span>
-            <span class="tp-val highlight" id="tpPriceVal">$67,600.00</span>
-          </div>
-        </div>
-      </div>
+        <!-- Right Panel: Hero Results & Canvas Visualizer -->
+        <div class="right-panel">
 
+          <!-- Primary Output Banner -->
+          <div class="card hero-result-card">
+            <div class="hero-header">
+              <span class="sub-heading">Trade Margin Required</span>
+              <span class="status-pill safe" id="safetyStatusPill">
+                <i class="fa-solid fa-shield-halved"></i> Safe Distance
+              </span>
+            </div>
+
+            <div class="primary-stat">
+              <span class="currency-symbol currency-sym">$</span>
+              <span id="marginOutput" class="stat-number">62.50</span>
+              <span class="stat-unit">MARGIN</span>
+            </div>
+            <p class="hero-explanation">
+              Allocate exactly <strong id="marginHighlight">$62.50</strong> margin to your <strong><span
+                  id="levHighlight">20</span>x</strong> trade to risk exactly <strong><span
+                  id="riskHighlight">$25.00</span></strong> on a <strong><span id="slHighlight">2.0</span>%</strong> stop
+              loss.
+            </p>
+
+            <!-- Dynamic Visual Gauge -->
+            <div class="visual-gauge-box">
+              <div class="gauge-labels">
+                <span>Required Margin (<span id="gaugeMarginValLabel">$62.50</span>)</span>
+                <span>Leveraged Position (<span id="gaugePositionValLabel">$1,250.00</span>)</span>
+              </div>
+              <div class="gauge-bar-container">
+                <div class="gauge-margin-bar" id="gaugeMarginBar" style="width: 5%;"></div>
+                <div class="gauge-borrowed-bar" id="gaugeBorrowedBar" style="width: 95%;"></div>
+              </div>
+              <div class="gauge-footer">
+                <span><i class="fa-solid fa-wallet"></i> Margin: <span id="gaugeMarginPct">5.0%</span></span>
+                <span><i class="fa-solid fa-bolt"></i> Borrowed Leverage: <span id="gaugeBorrowedVal">$1,187.50</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Grid -->
+          <div class="metrics-grid">
+
+            <div class="card metric-card">
+              <div class="metric-icon position-icon">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <div class="metric-info">
+                <span class="metric-title">Total Position Size</span>
+                <span class="metric-value" id="positionSizeVal">$1,250.00</span>
+                <span class="metric-subtitle" id="coinQtyVal">0.01923 BTC</span>
+              </div>
+            </div>
+
+            <div class="card metric-card">
+              <div class="metric-icon risk-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div class="metric-info">
+                <span class="metric-title">Loss on Margin</span>
+                <span class="metric-value loss-text" id="marginLossPctVal">40.00%</span>
+                <span class="metric-subtitle" id="maxDollarLossVal">$25.00 Loss</span>
+              </div>
+            </div>
+
+            <div class="card metric-card">
+              <div class="metric-icon liq-icon">
+                <i class="fa-solid fa-skull-crossbones"></i>
+              </div>
+              <div class="metric-info">
+                <span class="metric-title">Est. Liq. Distance</span>
+                <span class="metric-value" id="liqDistanceVal">~5.00%</span>
+                <span class="metric-subtitle" id="liqPriceVal">Est. Price: $61,750.00</span>
+              </div>
+            </div>
+
+            <div class="card metric-card">
+              <div class="metric-icon fee-icon">
+                <i class="fa-solid fa-receipt"></i>
+              </div>
+              <div class="metric-info">
+                <span class="metric-title">Estimated Fees</span>
+                <span class="metric-value" id="feeEstVal">$1.25</span>
+                <span class="metric-subtitle">0.05% Taker In + Out</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Liquidation Danger Warning Box -->
+          <div class="alert-box hidden" id="liqAlertBox">
+            <div class="alert-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="alert-content">
+              <h4>HIGH LIQUIDATION RISK!</h4>
+              <p id="liqAlertText">
+                Your Stop Loss is further than your estimated Liquidation price! You will be liquidated BEFORE your stop loss gets executed.
+              </p>
+            </div>
+          </div>
+
+          <!-- Interactive HTML5 Canvas Trade Visualizer -->
+          <div class="card canvas-chart-card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-chart-area"></i> Interactive Canvas Chart Visualizer</h2>
+              <span class="dir-badge long" id="dirBadge">LONG</span>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="priceChartCanvas" width="700" height="320"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
 
-    <!-- Right Column: Primary Output & Analytics -->
-    <div class="right-panel">
-
-      <!-- Primary Output Banner -->
-      <div class="card hero-result-card">
-        <div class="hero-header">
-          <span class="sub-heading">Trade Margin Required</span>
-          <span class="status-pill safe" id="safetyStatusPill"><i class="fa-solid fa-shield-halved"></i> Safe
-            Distance</span>
-        </div>
-
-        <div class="primary-stat">
-          <span class="currency-symbol">$</span>
-          <span id="marginOutput" class="stat-number">62.50</span>
-          <span class="stat-unit">USDT</span>
-        </div>
-        <p class="hero-explanation">
-          Add exactly <strong id="marginHighlight">$62.50</strong> margin to your <strong><span
-              id="levHighlight">20</span>x</strong> trade to risk exactly <strong><span
-              id="riskHighlight">$25.00</span></strong> on a <strong><span id="slHighlight">2.0</span>%</strong> stop
-          loss.
-        </p>
-
-        <!-- Dynamic Visual Gauge -->
-        <div class="visual-gauge-box">
-          <div class="gauge-labels">
-            <span>Required Margin ($62.50)</span>
-            <span>Leveraged Value ($1,250.00)</span>
-          </div>
-          <div class="gauge-bar-container">
-            <div class="gauge-margin-bar" id="gaugeMarginBar" style="width: 5%;"></div>
-            <div class="gauge-borrowed-bar" id="gaugeBorrowedBar" style="width: 95%;"></div>
-          </div>
-          <div class="gauge-footer">
-            <span><i class="fa-solid fa-wallet"></i> Margin: <span id="gaugeMarginPct">5%</span></span>
-            <span><i class="fa-solid fa-bolt"></i> Borrowed (19x): <span id="gaugeBorrowedVal">$1,187.50</span></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Metrics Grid -->
-      <div class="metrics-grid">
-
-        <div class="card metric-card">
-          <div class="metric-icon position-icon">
-            <i class="fa-solid fa-layer-group"></i>
-          </div>
-          <div class="metric-info">
-            <span class="metric-title">Total Position Size</span>
-            <span class="metric-value" id="positionSizeVal">$1,250.00</span>
-            <span class="metric-subtitle" id="coinQtyVal">0.01923 BTC</span>
-          </div>
-        </div>
-
-        <div class="card metric-card">
-          <div class="metric-icon risk-icon">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-          </div>
-          <div class="metric-info">
-            <span class="metric-title">Loss on Margin</span>
-            <span class="metric-value loss-text" id="marginLossPctVal">40.00%</span>
-            <span class="metric-subtitle" id="maxDollarLossVal">$25.00 Loss</span>
-          </div>
-        </div>
-
-        <div class="card metric-card">
-          <div class="metric-icon liq-icon">
-            <i class="fa-solid fa-skull-crossbones"></i>
-          </div>
-          <div class="metric-info">
-            <span class="metric-title">Est. Liq. Distance</span>
-            <span class="metric-value" id="liqDistanceVal">~5.00%</span>
-            <span class="metric-subtitle" id="liqPriceVal">Est. Price: $61,750.00</span>
-          </div>
-        </div>
-
-        <div class="card metric-card">
-          <div class="metric-icon fee-icon">
-            <i class="fa-solid fa-receipt"></i>
-          </div>
-          <div class="metric-info">
-            <span class="metric-title">Estimated Fees</span>
-            <span class="metric-value" id="feeEstVal">$1.25</span>
-            <span class="metric-subtitle">0.05% Taker In + Out</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Liquidation Warning Box -->
-      <div class="alert-box hidden" id="liqAlertBox">
-        <div class="alert-icon">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-        </div>
-        <div class="alert-content">
-          <h4>HIGH LIQUIDATION RISK!</h4>
-          <p id="liqAlertText">
-            Your Stop Loss (2% away) is further than your estimated Liquidation price (~5.0% away)! You will be
-            liquidated BEFORE your stop loss gets executed. Reduce leverage or tighten your SL.
-          </p>
-        </div>
-      </div>
-
-      <!-- Price Level Visualizer -->
-      <div class="card price-visualizer-card">
+    <!-- TAB 2: MULTI-TARGET EXIT LADDER -->
+    <div id="tab-multitp" class="tab-content">
+      <div class="card full-width-card">
         <div class="card-header">
-          <h2><i class="fa-solid fa-arrows-up-down"></i> Trade Price Levels</h2>
-          <span class="dir-badge long" id="dirBadge">LONG</span>
+          <h2><i class="fa-solid fa-network-wired"></i> Multi-Target Exit Ladder (Partial Take Profit Matrix)</h2>
+          <span class="sub-heading">Divide your exit across multiple price targets</span>
         </div>
 
-        <div class="price-levels">
-          <!-- Take Profit Level -->
-          <div class="price-row tp-row">
-            <div class="level-indicator tp-indicator">
-              <i class="fa-solid fa-flag-checkered"></i> TP Level
+        <div class="multi-tp-grid">
+          <!-- TP Target 1 -->
+          <div class="tp-ladder-card">
+            <div class="ladder-header tp1">
+              <span class="tp-title"><i class="fa-solid fa-flag"></i> Target 1 (TP1)</span>
+              <span class="badge">Scale Out</span>
             </div>
-            <div class="level-price" id="vizTpPrice">$67,600.00</div>
-            <div class="level-diff gain" id="vizTpDiff">+4.00% (+$50.00)</div>
+            <div class="ladder-body">
+              <div class="form-group">
+                <label>Position Exit Allocation (%)</label>
+                <div class="input-with-symbol">
+                  <input type="number" id="tp1AllocInput" value="30" min="0" max="100">
+                  <span class="symbol symbol-right">%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Target R:R Multiple</label>
+                <input type="number" id="tp1RrInput" value="1.5" step="0.1" min="0.5">
+              </div>
+              <div class="ladder-outputs">
+                <div class="ladder-row"><span>Exit Price:</span><strong id="tp1Price">$66,950.00</strong></div>
+                <div class="ladder-row"><span>Coin Qty to Sell:</span><strong id="tp1CoinQty">0.0057 BTC</strong></div>
+                <div class="ladder-row"><span>Realized Profit:</span><span class="gain" id="tp1Profit">+$11.25</span></div>
+              </div>
+            </div>
           </div>
 
-          <!-- Entry Level -->
-          <div class="price-row entry-row">
-            <div class="level-indicator entry-indicator">
-              <i class="fa-solid fa-location-crosshairs"></i> Entry Level
+          <!-- TP Target 2 -->
+          <div class="tp-ladder-card">
+            <div class="ladder-header tp2">
+              <span class="tp-title"><i class="fa-solid fa-flag"></i> Target 2 (TP2)</span>
+              <span class="badge">Core Exit</span>
             </div>
-            <div class="level-price" id="vizEntryPrice">$65,000.00</div>
-            <div class="level-diff neut">0.00% ($0.00)</div>
+            <div class="ladder-body">
+              <div class="form-group">
+                <label>Position Exit Allocation (%)</label>
+                <div class="input-with-symbol">
+                  <input type="number" id="tp2AllocInput" value="50" min="0" max="100">
+                  <span class="symbol symbol-right">%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Target R:R Multiple</label>
+                <input type="number" id="tp2RrInput" value="3.0" step="0.1" min="0.5">
+              </div>
+              <div class="ladder-outputs">
+                <div class="ladder-row"><span>Exit Price:</span><strong id="tp2Price">$68,900.00</strong></div>
+                <div class="ladder-row"><span>Coin Qty to Sell:</span><strong id="tp2CoinQty">0.0096 BTC</strong></div>
+                <div class="ladder-row"><span>Realized Profit:</span><span class="gain" id="tp2Profit">+$37.50</span></div>
+              </div>
+            </div>
           </div>
 
-          <!-- Stop Loss Level -->
-          <div class="price-row sl-row">
-            <div class="level-indicator sl-indicator">
-              <i class="fa-solid fa-hand"></i> SL Level
+          <!-- TP Target 3 -->
+          <div class="tp-ladder-card">
+            <div class="ladder-header tp3">
+              <span class="tp-title"><i class="fa-solid fa-flag"></i> Target 3 (TP3)</span>
+              <span class="badge">Runner Exit</span>
             </div>
-            <div class="level-price" id="vizSlPrice">$63,700.00</div>
-            <div class="level-diff loss" id="vizSlDiff">-2.00% (-$25.00)</div>
-          </div>
-
-          <!-- Liquidation Level -->
-          <div class="price-row liq-row">
-            <div class="level-indicator liq-indicator">
-              <i class="fa-solid fa-ban"></i> Est. Liquidation
+            <div class="ladder-body">
+              <div class="form-group">
+                <label>Position Exit Allocation (%)</label>
+                <div class="input-with-symbol">
+                  <input type="number" id="tp3AllocInput" value="20" min="0" max="100">
+                  <span class="symbol symbol-right">%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Target R:R Multiple</label>
+                <input type="number" id="tp3RrInput" value="5.0" step="0.1" min="0.5">
+              </div>
+              <div class="ladder-outputs">
+                <div class="ladder-row"><span>Exit Price:</span><strong id="tp3Price">$71,500.00</strong></div>
+                <div class="ladder-row"><span>Coin Qty to Sell:</span><strong id="tp3CoinQty">0.0038 BTC</strong></div>
+                <div class="ladder-row"><span>Realized Profit:</span><span class="gain" id="tp3Profit">+$25.00</span></div>
+              </div>
             </div>
-            <div class="level-price" id="vizLiqPrice">$61,750.00</div>
-            <div class="level-diff loss" id="vizLiqDiff">-5.00% (-$62.50)</div>
           </div>
         </div>
-      </div>
 
-      <!-- Action Buttons & Trade Logger -->
-      <div class="action-bar-row">
-        <button id="saveTradeBtn" class="action-btn primary-btn large-btn">
-          <i class="fa-solid fa-bookmark"></i> Save Trade Setup
-        </button>
-        <button id="clearLogBtn" class="action-btn secondary-btn">
-          <i class="fa-solid fa-trash-can"></i> Clear History
-        </button>
-      </div>
+        <!-- Blended Ladder Summary Card -->
+        <div class="blended-summary-card">
+          <div class="blended-stat">
+            <span class="label">Total Realized Profit (All TPs)</span>
+            <span class="val gain" id="blendedTotalProfit">+$73.75</span>
+          </div>
+          <div class="blended-stat">
+            <span class="label">Blended Risk/Reward</span>
+            <span class="val highlight" id="blendedRr">1 : 2.95</span>
+          </div>
+          <div class="blended-stat">
+            <span class="label">Return on Margin (ROM)</span>
+            <span class="val gain" id="blendedRom">+118.00%</span>
+          </div>
+          <div class="blended-stat">
+            <span class="label">Breakeven Hint</span>
+            <span class="val neut" id="breakevenHint">Move SL to $65,000 after TP1 fills</span>
+          </div>
+        </div>
 
-      <!-- Saved Trades Journal -->
-      <div class="card journal-card">
+      </div>
+    </div>
+
+    <!-- TAB 3: PORTFOLIO RISK & KELLY SIMULATOR -->
+    <div id="tab-portfolio" class="tab-content">
+      <div class="card full-width-card">
         <div class="card-header">
-          <h2><i class="fa-solid fa-list-check"></i> Saved Trades Log</h2>
-          <span class="counter-badge" id="tradeCountBadge">0 saved</span>
+          <h2><i class="fa-solid fa-vault"></i> Account Portfolio Sizing & Risk of Ruin Simulator</h2>
         </div>
-        <div class="table-wrapper">
-          <table class="trades-table" id="tradesTable">
+
+        <div class="portfolio-grid">
+          <div class="portfolio-inputs">
+            <div class="form-group">
+              <label for="portfolioCapInput">Total Portfolio Account Balance (<span class="currency-sym">$</span>)</label>
+              <div class="input-with-symbol">
+                <span class="symbol currency-sym">$</span>
+                <input type="number" id="portfolioCapInput" value="5000" min="10" step="any">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="portfolioRiskPctInput">Account Risk Limit Per Trade (%)</label>
+              <div class="input-with-symbol">
+                <input type="number" id="portfolioRiskPctInput" value="1.0" min="0.1" max="100" step="0.1">
+                <span class="symbol symbol-right">%</span>
+              </div>
+              <div class="preset-chips" id="portRiskPresets">
+                <button type="button" class="chip" data-value="0.5">0.5%</button>
+                <button type="button" class="chip active" data-value="1.0">1.0%</button>
+                <button type="button" class="chip" data-value="2.0">2.0%</button>
+                <button type="button" class="chip" data-value="3.0">3.0%</button>
+                <button type="button" class="chip" data-value="5.0">5.0%</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="estimatedWinRate">Your Estimated Strategy Win Rate (%)</label>
+              <div class="input-with-symbol">
+                <input type="number" id="estimatedWinRate" value="55" min="1" max="99">
+                <span class="symbol symbol-right">%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results Matrix -->
+          <div class="portfolio-results">
+            <div class="port-hero-stat">
+              <span class="sub">Recommended Dollar Risk</span>
+              <div class="big-val" id="portCalcRiskVal">$50.00</div>
+              <span class="desc">1.0% of $5,000 portfolio</span>
+            </div>
+
+            <div class="kelly-box">
+              <h4><i class="fa-solid fa-brain"></i> Kelly Criterion Position Suggestion</h4>
+              <p>Based on your 55% win-rate and 1:2 R:R, optimal fractional Kelly size is: <strong id="kellyOptimalVal">16.2% of Portfolio</strong>.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risk of Ruin & Drawdown Table -->
+        <div class="ruin-table-container">
+          <h3>Drawdown Survival & Consecutive Loss Matrix</h3>
+          <table class="ruin-table">
             <thead>
               <tr>
-                <th>Dir</th>
-                <th>Asset</th>
-                <th>Risk</th>
-                <th>SL %</th>
-                <th>Lev</th>
-                <th>Position</th>
-                <th>Margin</th>
-                <th>Action</th>
+                <th>Consecutive Losses</th>
+                <th>Portfolio Loss (<span class="currency-sym">$</span>)</th>
+                <th>Remaining Capital (<span class="currency-sym">$</span>)</th>
+                <th>Gain Needed to Break Even</th>
+                <th>Risk Status</th>
               </tr>
             </thead>
-            <tbody id="tradesTableBody">
-              <tr class="empty-row">
-                <td colspan="8">No saved trades yet. Click "Save Trade Setup" above to log position calculations.</td>
-              </tr>
+            <tbody id="ruinTableBody">
+              <!-- Injected by JS -->
             </tbody>
           </table>
         </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 4: STRESS TEST & FLASH-WICK DETECTOR -->
+    <div id="tab-stresstest" class="tab-content">
+      <div class="card full-width-card">
+        <div class="card-header">
+          <h2><i class="fa-solid fa-volcano"></i> Market Shock Stress Test & Flash-Wick Detector</h2>
+        </div>
+
+        <div class="stress-test-container">
+          <div class="form-group shock-slider-group">
+            <div class="label-row">
+              <label for="shockSlider">Simulate Sudden Market Price Shock Movement</label>
+              <span class="val-display" id="shockValDisplay">0.0%</span>
+            </div>
+            <input type="range" id="shockSlider" class="range-slider shock-slider" min="-25" max="25" step="0.5" value="0">
+            <div class="shock-preset-buttons">
+              <button type="button" class="chip" data-shock="-15">-15% Crash</button>
+              <button type="button" class="chip" data-shock="-5">-5% Drop</button>
+              <button type="button" class="chip active" data-shock="0">0% Current</button>
+              <button type="button" class="chip" data-shock="5">+5% Pump</button>
+              <button type="button" class="chip" data-shock="15">+15% Moon</button>
+            </div>
+          </div>
+
+          <div class="shock-results-grid">
+            <div class="shock-item">
+              <span class="label">Simulated Price</span>
+              <span class="val" id="shockSimPrice">$65,000.00</span>
+            </div>
+            <div class="shock-item">
+              <span class="label">Floating PnL (<span class="currency-sym">$</span>)</span>
+              <span class="val" id="shockPnlVal">$0.00</span>
+            </div>
+            <div class="shock-item">
+              <span class="label">Return on Equity (ROE)</span>
+              <span class="val" id="shockRoeVal">0.00%</span>
+            </div>
+            <div class="shock-item">
+              <span class="label">Volatility Risk Level</span>
+              <span class="val status-pill safe" id="shockRiskStatus">SAFE</span>
+            </div>
+          </div>
+
+          <!-- Funding Rate Holding Costs -->
+          <div class="funding-fee-matrix">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Estimated Funding Rate Holding Costs (0.01% Est.)</h3>
+            <div class="funding-grid">
+              <div class="funding-card">
+                <span class="period">8 Hours (1 Interval)</span>
+                <span class="cost" id="fundCost8h">$0.13</span>
+              </div>
+              <div class="funding-card">
+                <span class="period">24 Hours (1 Day)</span>
+                <span class="cost" id="fundCost24h">$0.38</span>
+              </div>
+              <div class="funding-card">
+                <span class="period">7 Days (1 Week)</span>
+                <span class="cost" id="fundCost7d">$2.63</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SAVED TRADES JOURNAL SECTION -->
+    <div class="card journal-card full-width-card">
+      <div class="card-header">
+        <h2><i class="fa-solid fa-book-journal-whills"></i> Saved Trades Log & Journal Analytics</h2>
+        <div class="journal-actions">
+          <button id="exportCsvBtn" class="action-btn secondary-btn" title="Export History to CSV">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
+          </button>
+          <button id="clearLogBtn" class="action-btn secondary-btn">
+            <i class="fa-solid fa-trash-can"></i> Clear Log
+          </button>
+        </div>
       </div>
 
+      <!-- Journal Analytics Bar -->
+      <div class="journal-stats-bar">
+        <div class="jstat"><span class="lbl">Saved Trades</span><strong id="jstatTotal">0</strong></div>
+        <div class="jstat"><span class="lbl">Win Rate</span><strong id="jstatWinRate" class="gain">0.0%</strong></div>
+        <div class="jstat"><span class="lbl">Total Realized PnL</span><strong id="jstatTotalPnl">$0.00</strong></div>
+        <div class="jstat"><span class="lbl">Profit Factor</span><strong id="jstatProfitFactor">1.0</strong></div>
+      </div>
+
+      <div class="action-bar-row">
+        <button id="saveTradeBtn" class="action-btn primary-btn large-btn">
+          <i class="fa-solid fa-bookmark"></i> Save Current Trade Setup to Journal
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="trades-table" id="tradesTable">
+          <thead>
+            <tr>
+              <th>Dir</th>
+              <th>Asset</th>
+              <th>Risk</th>
+              <th>SL %</th>
+              <th>Lev</th>
+              <th>Position</th>
+              <th>Margin</th>
+              <th>Outcome Status</th>
+              <th>Realized PnL</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tradesTableBody">
+            <tr class="empty-row">
+              <td colspan="10">No saved trades in log. Click "Save Current Trade Setup" above to track setups.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
   </main>
+
+  <!-- SOCIAL SETUP CARD EXPORT MODAL -->
+  <div id="exportModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-image"></i> Export Social Trade Setup Card</h3>
+        <button id="closeModalBtn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">High-resolution graphic card formatted for Telegram, Discord, and Twitter.</p>
+        <div class="canvas-preview-container">
+          <canvas id="socialCardCanvas" width="1200" height="675"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="downloadCardPngBtn" class="action-btn primary-btn">
+          <i class="fa-solid fa-download"></i> Download PNG Image
+        </button>
+        <button id="copyCardClipboardBtn" class="action-btn secondary-btn">
+          <i class="fa-regular fa-copy"></i> Copy Image
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Toast Notification -->
   <div id="toast" class="toast hidden">
