@@ -4,6 +4,13 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // --- First-time Visitor Session Initialization ---
+  if (!localStorage.getItem('riskmargin_v3_session')) {
+    localStorage.setItem('riskmargin_v3_session', 'true');
+    localStorage.removeItem('riskmargin_pro_trades');
+    localStorage.removeItem('riskmargin_trades');
+  }
+
   // --- App State ---
   let state = {
     mode: 'percentage', // 'percentage' or 'price'
@@ -1048,6 +1055,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const icon = advancedToggle.querySelector('.toggle-icon');
     icon.style.transform = advancedContent.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
   });
+
+  // Reset All Terminal Parameters & Saved Logs
+  const resetAllBtn = document.getElementById('resetAllBtn');
+  if (resetAllBtn) {
+    resetAllBtn.addEventListener('click', () => {
+      if (confirm('Reset terminal parameters and clear all saved trade logs?')) {
+        playClickSound();
+        localStorage.removeItem('riskmargin_pro_trades');
+        localStorage.removeItem('riskmargin_trades');
+        state.savedTrades = [];
+        state.riskUsd = 25;
+        state.slPercent = 2.0;
+        state.leverage = 20;
+        state.selectedRR = 2;
+        state.direction = 'long';
+
+        riskInput.value = 25;
+        slPercentInput.value = 2;
+        slPercentSlider.value = 2;
+        leverageInput.value = 20;
+        leverageSlider.value = 20;
+        dirLongRadio.checked = true;
+
+        renderTradesJournalTable();
+        calculateTrade();
+        showToast('Terminal data & saved logs reset!');
+      }
+    });
+  }
 
   // Navigation Dashboard Tabs
   dashTabs.forEach(tab => {
